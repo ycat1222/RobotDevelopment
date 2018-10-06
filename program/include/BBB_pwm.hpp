@@ -20,7 +20,7 @@ class PWM
     bool getPolarity();
     bool getIsRun();
 
-    static std::vector<int> availablePwmPinNum;
+    static const std::vector<int> availablePwmPinNum;
 
   private:
     std::string PWMPath;

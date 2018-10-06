@@ -2,7 +2,7 @@
 
 using namespace std;
 
-std::vector<int> PWM::availablePwmPinNum = {14, 16, 13, 19};
+std::vector<int> const PWM::availablePwmPinNum = {14, 16, 13, 19};
 
 PWM::PWM(int capemgr, int ocp, int pinConnector, int pinNum, int pwmNum)
 {

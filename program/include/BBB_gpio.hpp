@@ -20,7 +20,7 @@ class GPIO
     int getGPIONum() { return gpioNum; }
 
 
-    static std::vector<int> availableGpioNum;
+    static std::vector<int> const availableGpioNum;
 
     ~GPIO();
 
