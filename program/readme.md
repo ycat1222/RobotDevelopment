@@ -11,17 +11,19 @@ http://www.aise.ics.saitama-u.ac.jp/~gotoh/HowToInstallUbuntu1804OnWSL.html
 
 ## ビルド方法
 
-1. 下記のコマンドでclangをインストール  
+1. programブランチにチェックアウト  
+
+2. 下記のコマンドでclangをインストール  
 ```
 sudo apt-get install clang++-6.0 -y  
 ```
-2. cd コマンドを使ってprogramディレクトリへ移動  
+3. cd コマンドを使ってprogramディレクトリへ移動  
 
-3. 下記のコマンドでビルド  
+4. 下記のコマンドでビルド  
 ```
 make  
 ```
-4. 下記のコマンドで実行  
+5. 下記のコマンドで実行  
 ```
 ./start  
 ```
