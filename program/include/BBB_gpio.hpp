@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 
+namespace BBB{
 class GPIO
 {
   public:
@@ -27,6 +28,7 @@ class GPIO
   private:
     int gpioNum;
 
+};
 };
 
 

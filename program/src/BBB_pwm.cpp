@@ -1,6 +1,7 @@
 #include "BBB_pwm.hpp"
 
 using namespace std;
+using namespace BBB;
 
 std::vector<int> const PWM::availablePwmPinNum = {14, 16, 13, 19};
 

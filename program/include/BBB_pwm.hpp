@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 
+namespace BBB{
 class PWM
 {
   public:
@@ -24,5 +25,6 @@ class PWM
 
   private:
     std::string PWMPath;
+};
 };
 

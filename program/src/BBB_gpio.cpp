@@ -1,6 +1,7 @@
 #include "BBB_gpio.hpp"
 
 using namespace std;
+using namespace BBB;
 
 std::vector<int> const GPIO::availableGpioNum = 
     {60, 48, 49, 117, 115, 112, 20, 66, 67, 69, 68, 45, 44, 26, 47, 46, 27, 65, 61};
