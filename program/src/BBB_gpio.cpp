@@ -3,14 +3,24 @@
 using namespace std;
 using namespace BBB;
 
-std::vector<int> const GPIO::availableGpioNum = 
+const std::vector<int> GPIO::availableGpioNum = 
     {60, 48, 49, 117, 115, 112, 20, 66, 67, 69, 68, 45, 44, 26, 47, 46, 27, 65, 61};
 
 GPIO::GPIO(int gpioNum_)
 {
-    gpioNum = gpioNum_;
-    ofstream file("/sys/class/gpio/export", ios::binary);
-    file << gpioNum;
+    bool isGPIOexist;
+
+    for(auto num : availableGpioNum)
+        if(gpioNum_ == num) isGPIOexist = true;
+
+    if(isGPIOexist){
+        gpioNum = gpioNum_;
+        ofstream file("/sys/class/gpio/export", ios::binary);
+        file << gpioNum;
+        isGPIOSetted = true;
+    } else {
+        throw std::runtime_error("存在しないGPIO番号が参照されました");
+    }
 }
 
 GPIO::~GPIO()
@@ -21,6 +31,8 @@ GPIO::~GPIO()
 
 void GPIO::setDirection(bool is_IN)
 {
+    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/direction";
 
@@ -34,6 +46,8 @@ void GPIO::setDirection(bool is_IN)
 
 void GPIO::setEdge(bool is_both)
 {
+    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/edge";
 
@@ -46,6 +60,8 @@ void GPIO::setEdge(bool is_both)
 
 void GPIO::setActiveLow()
 {
+    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/active_low";
 
@@ -55,6 +71,8 @@ void GPIO::setActiveLow()
 
 int GPIO::getValue()
 {
+    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+    
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
 

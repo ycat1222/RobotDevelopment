@@ -3,6 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <exception>
+#include <algorithm>
 
 namespace BBB{
 class GPIO
@@ -27,6 +29,8 @@ class GPIO
 
   private:
     int gpioNum;
+   
+    bool isGPIOSetted;
 
 };
 };
