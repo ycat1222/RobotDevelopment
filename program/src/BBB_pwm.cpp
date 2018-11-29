@@ -3,10 +3,19 @@
 using namespace std;
 using namespace BBB;
 
-std::vector<int> const PWM::availablePwmPinNum = {14, 16, 13, 19};
+std::vector<int> const PWM::availablePwmPinNum = {14, 22};
 
-PWM::PWM(int capemgr, int ocp, int pinConnector, int pinNum, int pwmNum)
+//先に有効化するPWMについて、pwmNum = 15,
+//後に有効化するPWMについて、pwmNum = 16 が対応
+PWM::PWM(int pinNum, int pwmNum)
 {
+    bool isPinNumExist = false;
+
+    for(auto num : availablePwmPinNum){
+        if(num == pwmNum) isPinNumExist = true;
+    }
+    if(!isPinNumExist) ErrorBBB("This pinNum is NOT exist.");
+
     stringstream path;
     path << "/sys/devices/bonecapemgr." << capemgr << "/slots";
 
