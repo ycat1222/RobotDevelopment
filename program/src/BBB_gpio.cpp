@@ -83,7 +83,7 @@ void GPIO::setValue(bool isActive)
     else file.write("0", sizeof("0"));
 }
 
-int GPIO::getValue()
+int GPIO::value()
 {
     if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
     
@@ -91,7 +91,7 @@ int GPIO::getValue()
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
 
     ifstream file(path.str(), ios::binary);
-    char* value;
-    file.read(value, sizeof(int));
-    return atoi(value);
+    int value;
+    file.read(reinterpret_cast<char*>(&value), sizeof(int));
+    return value;
 }

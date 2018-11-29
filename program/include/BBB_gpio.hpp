@@ -23,8 +23,8 @@ class GPIO
     void setActiveLow();
     void setValue(bool isActive);
 
-    int getValue();
-    int getGPIONum() { return gpioNum; }
+    int value();
+    int GPIOnum() { return gpioNum; }
 
 
     static std::vector<int> const availableGpioNum;
