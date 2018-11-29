@@ -6,7 +6,10 @@
 #include <exception>
 #include <algorithm>
 
+#include<BBB_error.hpp>
+
 namespace BBB{
+
 class GPIO
 {
   public:
@@ -18,6 +21,7 @@ class GPIO
     void setDirection(bool is_IN);
     void setEdge(bool isBoth);
     void setActiveLow();
+    void setValue(bool isActive);
 
     int getValue();
     int getGPIONum() { return gpioNum; }

@@ -19,19 +19,19 @@ GPIO::GPIO(int gpioNum_)
         file << gpioNum;
         isGPIOSetted = true;
     } else {
-        throw std::runtime_error("存在しないGPIO番号が参照されました");
+        throw ErrorBBB("存在しないGPIO番号が参照されました");
     }
 }
 
 GPIO::~GPIO()
 {
     ofstream file("/sys/class/gpio/unexport", ios::binary);
-    file.write((char *)&gpioNum, sizeof(gpioNum));
+    file.write(to_string(gpioNum).c_str(), sizeof(gpioNum));
 }
 
 void GPIO::setDirection(bool is_IN)
 {
-    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/direction";
@@ -46,7 +46,7 @@ void GPIO::setDirection(bool is_IN)
 
 void GPIO::setEdge(bool is_both)
 {
-    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/edge";
@@ -60,24 +60,38 @@ void GPIO::setEdge(bool is_both)
 
 void GPIO::setActiveLow()
 {
-    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/active_low";
 
     ofstream file(path.str(), ios::binary);
-    file.write((char *)1, sizeof(int));
+    file.write("1", sizeof("1"));
+}
+
+void GPIO::setValue(bool isActive)
+{
+    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    
+    stringstream path;
+    path << "/sys/class/gpio/gpio" << gpioNum << "/value";
+
+    ofstream file(path.str(), ios::binary);
+    if(!file) throw ErrorBBB("Cannot open GPIO##/value");
+    
+    if(isActive)  file.write("1", sizeof("1"));
+    else file.write("0", sizeof("0"));
 }
 
 int GPIO::getValue()
 {
-    if(!isGPIOSetted) throw std::runtime_error("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
     
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
 
     ifstream file(path.str(), ios::binary);
-    int value;
-    file.read((char *)&value, sizeof(int));
-    return value;
+    char* value;
+    file.read(value, sizeof(int));
+    return atoi(value);
 }
