@@ -4,11 +4,15 @@
 #include <fstream>
 #include <vector>
 
+#include<BBB_error.hpp>
+
 namespace BBB{
 class PWM
 {
   public:
-    PWM(int capemgr, int ocp, int pinConnector, int pinNum, int pwmNum);
+    //先に有効化するPWMについて、pwmNum = 15,
+    //後に有効化するPWMについて、pwmNum = 16 が対応
+    PWM(int pinNum, int pwmNum);
 
     void setPeriod(int period);
     void setDuty(int duty);
@@ -19,12 +23,16 @@ class PWM
     int getPeriod();
     int getDuty();
     bool getPolarity();
-    bool getIsRun();
+    bool isRun();
 
     static const std::vector<int> availablePwmPinNum;
 
   private:
     std::string PWMPath;
+
+    static const int capemgr = 9;
+    static const int ocp = 3;
+    static const int pinConnector = 9;
 };
 };
 
