@@ -13,20 +13,20 @@ GPIO::GPIO(int gpioNum_)
     for(auto num : availableGpioNum)
         if(gpioNum_ == num) isGPIOexist = true;
 
-    if(isGPIOexist){
-        gpioNum = gpioNum_;
-        ofstream file("/sys/class/gpio/export", ios::binary);
-        file << gpioNum;
-        isGPIOSetted = true;
-    } else {
+
+    if(!isGPIOexist){
         throw ErrorBBB("存在しないGPIO番号が参照されました");
     }
+    gpioNum = gpioNum_;
+    ofstream file("/sys/class/gpio/export", ios::binary);
+    file << gpioNum;
+    isGPIOSetted = true;
 }
 
 GPIO::~GPIO()
 {
     ofstream file("/sys/class/gpio/unexport", ios::binary);
-    file.write(to_string(gpioNum).c_str(), sizeof(gpioNum));
+    file << gpioNum;
 }
 
 void GPIO::setDirection(bool is_IN)
@@ -66,7 +66,7 @@ void GPIO::setActiveLow()
     path << "/sys/class/gpio/gpio" << gpioNum << "/active_low";
 
     ofstream file(path.str(), ios::binary);
-    file.write("1", sizeof("1"));
+    file << 1;
 }
 
 void GPIO::setValue(bool isActive)
@@ -79,8 +79,8 @@ void GPIO::setValue(bool isActive)
     ofstream file(path.str(), ios::binary);
     if(!file) throw ErrorBBB("Cannot open GPIO##/value");
     
-    if(isActive)  file.write("1", sizeof("1"));
-    else file.write("0", sizeof("0"));
+    if(isActive) file << 1;
+    else         file << 0;
 }
 
 int GPIO::value()
@@ -92,6 +92,6 @@ int GPIO::value()
 
     ifstream file(path.str(), ios::binary);
     int value;
-    file.read(reinterpret_cast<char*>(&value), sizeof(int));
+    file >> value;
     return value;
 }

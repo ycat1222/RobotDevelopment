@@ -17,57 +17,63 @@ PWM::PWM(int pinNum, int pwmNum)
     if(!isPinNumExist) ErrorBBB("This pinNum is NOT exist.");
 
     stringstream path;
-    path << "/sys/devices/bonecapemgr." << capemgr << "/slots";
+    path << "/sys/devices/bone_capemgr." << capemgr << "/slots";
 
     ofstream pwmFile(path.str());
+    if(!pwmFile) ErrorBBB("Cannot Open File");
     pwmFile << "am33xx_pwm";
     pwmFile.close();
 
     ofstream pwmFile2(path.str());
     pwmFile2 << "bone_pwm_P" << pinConnector << "_" << pinNum;
 
-    path << "/sys/devices/ocp." << ocp << "pwm_test_P" 
-        << pinConnector << "_" << pinNum << "." << pwmNum;
-    PWMPath = path.str();
+    stringstream path2;
+    path2 << "/sys/devices/ocp." << ocp << "/pwm_test_P" 
+          << pinConnector << "_" << pinNum << "." << pwmNum;
+
+    PWMPath = path2.str();
 }
 
 void PWM::setPeriod(int period)
 {
     ofstream file(PWMPath + "/period", ios::binary);
-    file.write(to_string(period).c_str(), sizeof(int));
+    file << period;
 }
 
 void PWM::setDuty(int duty)
 {
+    //注意 : 回路によって、ON/OFF時間が反転しているため、
+    //      その措置(period() - duty)を含む
+    auto _duty = getPeriod() - duty;
     ofstream file(PWMPath + "/duty", ios::binary);
-    file.write(to_string(duty).c_str(), sizeof(int));
+    file << _duty;
 }
 
 void PWM::setPolarity(bool polarity)
 {
     ofstream file(PWMPath + "/polarity", ios::binary);
 
-    if(polarity) file.write("1", sizeof(int));
-    else         file.write("0", sizeof(int));
+    if(polarity) file << 1;
+    else         file << 0;
 }
 
 void PWM::run()
 {
     ofstream file(PWMPath + "/run", ios::binary);
-    file.write("1", sizeof("1"));
+    file << 1;
 }
 
 void PWM::stop()
 {
     ofstream file(PWMPath + "/run", ios::binary);
-    file.write("0", sizeof("0"));
+    file << 0;
 }
 
 int PWM::getPeriod()
 {
     ifstream file(PWMPath + "/period", ios::binary);
     int period;
-    file.read(reinterpret_cast<char*>(&period), sizeof(int));
+    file >> period;
     return period;
 }
 
@@ -75,26 +81,25 @@ int PWM::getDuty()
 {
     fstream file(PWMPath + "/duty", ios::binary);
     int duty;
-    file.read(reinterpret_cast<char*>(&duty), sizeof(duty));
-    return duty;
+    file >> duty;
+    return getPeriod() - duty;
 }
 
 bool PWM::getPolarity()
 {
     ifstream file(PWMPath + "/polarity", ios::binary);
-    int tmp;
-    file.read(reinterpret_cast<char*>(&tmp), sizeof(tmp));
-    
-    if (tmp == 0) return 0;
-    else          return 1;
+    int polarity;
+   
+    if (polarity == 0) return 0;
+    else               return 1;
 }
 
 bool PWM::isRun()
 {
     ifstream file(PWMPath + "/run", ios::binary);
-    int tmp;
-    file.read(reinterpret_cast<char*>(&tmp), sizeof(tmp));
+    int isRun_;
+    file >> isRun_;
 
-    if (tmp == 1) return true;
-    else          return false;
+    if (isRun_ == 1) return true;
+    else             return false;
 }
