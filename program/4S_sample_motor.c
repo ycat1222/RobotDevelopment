@@ -48,7 +48,9 @@ int main(){
 	
 	while(1){
 		
-		run_pwm(0,0,0);
+		run_pwm(0,PWM_PERIOD*0.5,1);
+		run_pwm(1,PWM_PERIOD*0.5,1);
+
 		printf("run\n");
 
 		//キー入力関数
@@ -59,6 +61,8 @@ int main(){
 	}
 
 	run_pwm(0,0,0);
+	run_pwm(1,0,0);
+	
 	close_pwm(0);
 	close_pwm(1);
 	
