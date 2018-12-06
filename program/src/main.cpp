@@ -20,11 +20,11 @@ void BBB::run(void)
 	in2.setValue(false);
 
 	pwm1.setPeriod(10000000);
-	pwm1.setDuty(pwm1.getDuty() * 0.5);
+	pwm1.setDuty(pwm1.getPeriod() * 0.5);
 
 	pwm1.run();
 
-	const int RUNTIME = 10000;
+	const int RUNTIME = 100000;
 
 	auto start = std::chrono::system_clock::now();
 	while(true)
