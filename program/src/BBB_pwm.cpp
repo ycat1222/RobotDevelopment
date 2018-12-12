@@ -103,6 +103,7 @@ bool PWM::polarity()
 {
     ifstream file(PWMPath + "/polarity", ios::binary);
     int polarity;
+	file >> polarity;
    
     if (polarity == 0) return 0;
     else               return 1;
