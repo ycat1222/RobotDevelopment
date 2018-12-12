@@ -31,12 +31,12 @@ void BBB::Motor::setDutyRate(double rate)
 	pwm.setDutyRate(rate);
 }
 
-void BBB::Motor::dutyRate()
+double BBB::Motor::dutyRate()
 {
 	return pwm.dutyRate();
 }
 
-void BBB::Motor::duty()
+int BBB::Motor::duty()
 {
 	return pwm.duty();
 }

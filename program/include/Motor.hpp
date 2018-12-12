@@ -10,8 +10,8 @@ public:
     void setGPIO(int gpioNumIN1, int gpioNumIN2);
 
 	void setDutyRate(double rate);
-	void dutyRate();
-	void duty();
+	double dutyRate();
+	int duty();
 
 	// IN1 = 1, IN2 = 0 に設定
     void runNormal();
