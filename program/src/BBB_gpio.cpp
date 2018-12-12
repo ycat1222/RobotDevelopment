@@ -15,7 +15,7 @@ GPIO::GPIO(int gpioNum_)
 
 
     if(!isGPIOexist){
-        throw ErrorBBB("存在しないGPIO番号が参照されました");
+        throw ErrorBBB("This GPIO num is NOT exist.");
     }
     gpioNum = gpioNum_;
     ofstream file("/sys/class/gpio/export", ios::binary);
@@ -31,7 +31,7 @@ GPIO::~GPIO()
 
 void GPIO::setDirection(bool is_IN)
 {
-    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/direction";
@@ -46,7 +46,7 @@ void GPIO::setDirection(bool is_IN)
 
 void GPIO::setEdge(bool is_both)
 {
-    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/edge";
@@ -60,7 +60,7 @@ void GPIO::setEdge(bool is_both)
 
 void GPIO::setActiveLow()
 {
-    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
 
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/active_low";
@@ -71,7 +71,7 @@ void GPIO::setActiveLow()
 
 void GPIO::setValue(bool isActive)
 {
-    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
     
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
@@ -85,7 +85,7 @@ void GPIO::setValue(bool isActive)
 
 int GPIO::value()
 {
-    if(!isGPIOSetted) throw ErrorBBB("GPIO番号が設定されていません");
+    if(!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
     
     stringstream path;
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
