@@ -44,9 +44,16 @@ void PWM::setDuty(int duty)
 {
     //注意 : 回路によって、ON/OFF時間が反転しているため、
     //      その措置(period() - duty)を含む
-    auto _duty = getPeriod() - duty;
+    auto _duty = period() - duty;
     ofstream file(PWMPath + "/duty", ios::binary);
     file << _duty;
+}
+
+void BBB::PWM::setDutyRate(double rate)
+{
+	//rateが、0 から 1の間のときだけ、dutyを設定する
+	if(rate >= 0 && rate <= 1.0) setDuty(rate*period());
+	else throw ErrorBBB("Duty rate is not valid.");
 }
 
 void PWM::setPolarity(bool polarity)
@@ -69,7 +76,7 @@ void PWM::stop()
     file << 0;
 }
 
-int PWM::getPeriod()
+int PWM::period()
 {
     ifstream file(PWMPath + "/period", ios::binary);
     int period;
@@ -77,15 +84,20 @@ int PWM::getPeriod()
     return period;
 }
 
-int PWM::getDuty()
+int PWM::duty()
 {
     fstream file(PWMPath + "/duty", ios::binary);
     int duty;
     file >> duty;
-    return getPeriod() - duty;
+    return period() - duty;
 }
 
-bool PWM::getPolarity()
+double BBB::PWM::dutyRate()
+{
+	return (double)duty() / period();
+}
+
+bool PWM::polarity()
 {
     ifstream file(PWMPath + "/polarity", ios::binary);
     int polarity;
