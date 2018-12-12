@@ -32,6 +32,8 @@ PWM::PWM(int pinNum, int pwmNum)
           << pinConnector << "_" << pinNum << "." << pwmNum;
 
     PWMPath = path2.str();
+
+	setPeriod(PERIOD);
 }
 
 void PWM::setPeriod(int period)
