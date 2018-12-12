@@ -11,7 +11,7 @@ namespace BBB {
 		ErrorBBB(char* str_)
 			{ str = str_; }
 
-		const char* what() const override
+		const char* what()
 			{ return str.c_str(); }
 
 	};
