@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <exception>
 #include <string>
 
@@ -8,10 +8,9 @@ namespace BBB {
 		std::string str;
 
 	public:
-		ErrorBBB(char* str_)
-			{ str = str_; }
+		ErrorBBB(std::string str_) : str(str_) {}
 
-		const char* what()
+		const char* what() const noexcept override
 			{ return str.c_str(); }
 
 	};
