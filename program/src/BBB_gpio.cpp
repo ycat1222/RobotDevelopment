@@ -19,6 +19,7 @@ GPIO::GPIO(int gpioNum_)
     }
     gpioNum = gpioNum_;
     ofstream file("/sys/class/gpio/export", ios::binary);
+	if (!file) throw ErrorBBB("Cannot open /sys/class/gpio/export");
     file << gpioNum;
     isGPIOSetted = true;
 }
