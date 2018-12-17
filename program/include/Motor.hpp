@@ -1,3 +1,4 @@
+﻿#pragma once
 #include<BBB_gpio.hpp>
 #include<BBB_pwm.hpp>
 
@@ -21,6 +22,8 @@ public:
 	void brake();
 	// IN1 = IN2 = 0 に設定
 	void stop();
+
+	~Motor();
     
 private:
 	explicit Motor();

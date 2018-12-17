@@ -9,7 +9,12 @@ BBB::Motor::Motor(int pwmPinNum, int gpioNumIN1, int gpioNumIN2)
 {
 	pwm = PWM(pwmPinNum, pwmUniqueNum);
 	IN1 = GPIO(gpioNumIN1);
+	IN1.activate();
 	IN2 = GPIO(gpioNumIN2);
+	IN2.activate();
+
+	IN1.setDirection(false);
+	IN2.setDirection(false);
 
 	//たぶん有効化するごとに、1ずつ増えてく?
 	pwmUniqueNum++;
@@ -24,6 +29,9 @@ void Motor::setGPIO(int gpioNumIN1, int gpioNumIN2)
 {
 	IN1 = GPIO(gpioNumIN1);
 	IN2 = GPIO(gpioNumIN2);
+
+	IN1.setDirection(false);
+	IN2.setDirection(false);
 }
 
 void BBB::Motor::setDutyRate(double rate)
@@ -43,24 +51,36 @@ int BBB::Motor::duty()
 
 void BBB::Motor::runNormal()
 {
-	IN1.setValue(1);
-	IN2.setValue(0);
+	pwm.stop();
+	IN1.setValue(true);
+	IN2.setValue(false);
+	pwm.run();
 }
 
 void BBB::Motor::runReverse()
 {
-	IN1.setValue(0);
-	IN2.setValue(1);
+	pwm.stop();
+	IN1.setValue(false);
+	IN2.setValue(true);
+	pwm.run();
 }
 
 void BBB::Motor::brake()
 {
-	IN1.setValue(1);
-	IN2.setValue(1);
+	IN1.setValue(true);
+	IN2.setValue(true);
 }
 
 void BBB::Motor::stop()
 {
-	IN1.setValue(0);
-	IN2.setValue(0);
+	IN1.setValue(false);
+	IN2.setValue(false);
+
+	pwm.stop();
+}
+
+BBB::Motor::~Motor()
+{
+	IN1.disActivate();
+	IN2.disActivate();
 }
