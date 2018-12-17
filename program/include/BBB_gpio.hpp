@@ -18,12 +18,17 @@ class GPIO
 
     void setGPIO(int gpioNum_) { *this = GPIO(gpioNum_); };
     //inならtrue、outならfalse
+
     void setDirection(bool is_IN);
     void setEdge(bool isBoth);
     void setActiveLow();
-    void setValue(bool isActive);
 
+	void activate();
+	void disActivate();
+
+    void setValue(bool isActive);
     int value();
+
     int GPIOnum() { return gpioNum; }
 
 
@@ -33,7 +38,6 @@ class GPIO
 
   private:
     int gpioNum;
-   
     bool isGPIOSetted;
 
 };

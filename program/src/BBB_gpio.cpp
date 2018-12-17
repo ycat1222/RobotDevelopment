@@ -1,4 +1,4 @@
-#include "BBB_gpio.hpp"
+﻿#include "BBB_gpio.hpp"
 
 using namespace std;
 using namespace BBB;
@@ -28,6 +28,20 @@ GPIO::~GPIO()
 {
     ofstream file("/sys/class/gpio/unexport", ios::binary);
     file << gpioNum;
+}
+
+void BBB::GPIO::activate()
+{
+	ofstream file("/sys/class/gpio/export", ios::binary);
+	if (!file) throw ErrorBBB("Cannot open /sys/class/gpio/export");
+	file << gpioNum;
+}
+
+void BBB::GPIO::disActivate()
+{
+	ofstream file("/sys/class/gpio/unexport", ios::binary);
+	if (!file) throw ErrorBBB("Cannot open /sys/class/gpio/export");
+	file << gpioNum;
 }
 
 void GPIO::setDirection(bool is_IN)
@@ -78,7 +92,8 @@ void GPIO::setValue(bool isActive)
     path << "/sys/class/gpio/gpio" << gpioNum << "/value";
 
     ofstream file(path.str(), ios::binary);
-    if(!file) throw ErrorBBB("Cannot open GPIO##/value");
+	std::string errStr = "Cannot open ./gpio/gpio" + to_string(gpioNum) + "/value";
+    if(!file) throw ErrorBBB(errStr);
     
     if(isActive) file << 1;
     else         file << 0;
