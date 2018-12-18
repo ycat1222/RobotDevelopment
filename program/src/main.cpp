@@ -10,47 +10,6 @@ namespace BBB{
 
 void BBB::run(void)
 {
-	//auto pwm1 = BBB::PWM(22, 16);
-	//auto in1 = BBB::GPIO(65), in2 = BBB::GPIO(46);
-
-	//in1.setDirection(false);
-	//in2.setDirection(false);
-
-	//in1.setValue(true);
-	//in2.setValue(false);
-
-	////pwm1.setPeriod(10000000);
-	//pwm1.setDutyRate(0.5);
-
-	//pwm1.run();
-
-	//const int RUNTIME = 5000;
-
-	//msecWait(RUNTIME);
-
-	//pwm1.stop();
-
-	//auto pwm1 = BBB::PWM(14, 15);
-	//auto in1 = BBB::GPIO(61), in2 = BBB::GPIO(60);
-
-	//in1.setDirection(false);
-	//in2.setDirection(false);
-
-	//in1.setValue(true);
-	//in2.setValue(false);
-
-	////pwm1.setPeriod(10000000);
-	//pwm1.setDutyRate(0.5);
-
-	//pwm1.run();
-
-	//const int RUNTIME = 5000;
-
-	//msecWait(RUNTIME);
-
-	//pwm1.stop();
-
-
 	auto motor1 = BBB::Motor(14, 61, 60);
 	auto motor2 = BBB::Motor(22, 65, 46);
 	motor1.setDutyRate(0.5);
