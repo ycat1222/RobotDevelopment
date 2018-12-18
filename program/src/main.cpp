@@ -5,7 +5,7 @@
 
 namespace BBB{
 	void run(void);
-	void msecWait(const int &time);
+	void msecWait(const unsigned int &time);
 };
 
 void BBB::run(void)
@@ -53,19 +53,22 @@ void BBB::run(void)
 
 	auto motor1 = BBB::Motor(14, 61, 60);
 	auto motor2 = BBB::Motor(22, 65, 46);
+	motor1.setDutyRate(0.5);
+	motor1.runNormal();
 	motor2.setDutyRate(0.5);
 	motor2.runNormal();
 
 	msecWait(5000);
 
-	//motor2.runReverse();
+	motor2.runReverse();
 
-	//msecWait(5000);
+	msecWait(5000);
 
 	motor2.stop();
+	motor1.stop();
 }
 
-void BBB::msecWait(const int &time)
+void BBB::msecWait(const unsigned int &time)
 {
 	auto start = std::chrono::system_clock::now();
 	while (true)
