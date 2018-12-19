@@ -53,10 +53,21 @@ void GPIO::setDirection(bool is_IN)
 
     ofstream file(path.str());
 
-    if (is_IN)
-        file << "in";
-    else
-        file << "out";
+    if (is_IN) file << "in";
+    else	   file << "out";
+}
+
+void BBB::GPIO::setDirection(Direction d)
+{
+	if (!isGPIOSetted) throw ErrorBBB("GPIO num has NOT been set.");
+
+	stringstream path;
+	path << "/sys/class/gpio/gpio" << gpioNum << "/direction";
+
+	ofstream file(path.str());
+
+	if (d == IN)	   file << "in";
+	else if (d == OUT) file << "out";
 }
 
 void GPIO::setEdge(bool is_both)

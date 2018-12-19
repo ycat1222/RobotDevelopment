@@ -13,13 +13,16 @@ namespace BBB{
 class GPIO
 {
   public:
-    GPIO(){};
+    GPIO() {}
     GPIO(int gpioNum_);
 
     void setGPIO(int gpioNum_) { *this = GPIO(gpioNum_); };
     //inならtrue、outならfalse
 
+	enum Direction { IN, OUT };
     void setDirection(bool is_IN);
+	void setDirection(Direction d);
+
     void setEdge(bool isBoth);
     void setActiveLow();
 
