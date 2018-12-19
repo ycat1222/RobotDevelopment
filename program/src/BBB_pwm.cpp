@@ -34,6 +34,7 @@ PWM::PWM(int pinNum, int pwmNum)
     PWMPath = path2.str();
 
 	setPeriod(PERIOD);
+	setDutyRate(0.0);
 }
 
 void PWM::setPeriod(int period)
