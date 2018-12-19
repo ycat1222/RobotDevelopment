@@ -4,7 +4,7 @@
 class UltraSonicSensor : public BBB::GPIO {
 public:
 
-	UltraSonicSensor() {};
+	UltraSonicSensor() {}
 	UltraSonicSensor(int gpioNum_) : BBB::GPIO(gpioNum_)
 	{
 		this->setDirection(true);

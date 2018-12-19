@@ -10,7 +10,7 @@ namespace BBB{
 class PWM
 {
   public:
-	PWM() {};
+	PWM() {}
     //先に有効化するPWMについて、pwmNum = 15,
     //後に有効化するPWMについて、pwmNum = 16 が対応
     PWM(int pinNum, int pwmNum);
