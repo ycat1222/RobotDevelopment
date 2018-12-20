@@ -10,15 +10,20 @@ namespace BBB{
 
 void BBB::run(void)
 {
+	msecWait(30000);//setting time
+
 	auto motor1 = BBB::Motor(14, 61, 60);
 	auto motor2 = BBB::Motor(22, 65, 46);
+
 	motor1.setDutyRate(0.5);
-	motor1.runNormal();
 	motor2.setDutyRate(0.5);
+
+	motor1.runNormal();
 	motor2.runNormal();
 
 	msecWait(5000);
 
+	motor1.runReverse();
 	motor2.runReverse();
 
 	msecWait(5000);
