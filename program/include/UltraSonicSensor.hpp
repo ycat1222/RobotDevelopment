@@ -1,5 +1,8 @@
 #pragma once
 #include "BBB_gpio.hpp"
+#include <poll.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 class UltraSonicSensor : public BBB::GPIO {
 public:
