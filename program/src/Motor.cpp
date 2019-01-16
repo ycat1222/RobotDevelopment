@@ -4,14 +4,12 @@ using namespace BBB;
 // PWM固有の値(静的変数)の初期化
 int BBB::Motor::pwmUniqueNum = 15;
 
-
 BBB::Motor::Motor(int pwmPinNum, int gpioNumIN1, int gpioNumIN2)
 {
-	pwm = PWM(pwmPinNum, pwmUniqueNum);
-	IN1 = GPIO(gpioNumIN1);
-	IN1.activate();
-	IN2 = GPIO(gpioNumIN2);
-	IN2.activate();
+	//無理やりコンストラクタを呼び出し
+	new(&pwm) PWM(pwmPinNum, pwmUniqueNum);
+	new(&IN1) GPIO(gpioNumIN1);
+	new(&IN2) GPIO(gpioNumIN2);
 
 	IN1.setDirection(false);
 	IN2.setDirection(false);
