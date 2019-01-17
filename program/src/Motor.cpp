@@ -1,4 +1,4 @@
-#include<Motor.hpp>
+#include "Motor.hpp"
 using namespace BBB;
 
 // PWM固有の値(静的変数)の初期化
