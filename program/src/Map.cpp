@@ -11,28 +11,34 @@ BBB::Map::Map(std::string mapFilePath)
 
 	map = vector<vector<Cell>>(MAP_SIZE, vector<Cell>(MAP_SIZE));
 	
-	while (!mapFile.eof()) 
+	for (size_t i = 0; i < MAP_SIZE; i++) 
 	{
-		unsigned int x, y;
-		mapFile >> x >> y;
-
-		if(x < MAP_SIZE && y < MAP_SIZE)
+		for(size_t j = 0; j < MAP_SIZE; j++)
 		{
-			int east, west, south, north;
-			mapFile >> east >> west >> south >> north;
+			unsigned int x, y;
+			mapFile >> x >> y;
 
-			map[x][y].east = east;
-			map[x][y].west = west;
-			map[x][y].south = south;
-			map[x][y].north = north;
+			if (x < MAP_SIZE && y < MAP_SIZE)
+			{
+				Cell& cell = map[x][y];
 
-			int isBonus;
-			mapFile >> isBonus;
+				int east, west, south, north;
+				mapFile >> east >> west >> south >> north;
 
-			if (isBonus == true) map[x][y].isBonus = true;
-			else map[x][y].isBonus = false;
+				cell.east = east;
+				cell.west = west;
+				cell.south = south;
+				cell.north = north;
+
+				std::string isBonus;
+				mapFile >> isBonus;
+
+				if (isBonus == "bonus") map[x][y].isBonus = true;
+				else cell.isBonus = false;
+			}
+			else throw BBB::ErrorBBB("Map size is too large.");
 		}
-		else throw BBB::ErrorBBB("Map size is too large.");
+		
 		
 	}
 }
