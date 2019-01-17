@@ -1,12 +1,9 @@
 #pragma once
+#include "BBB_error.hpp"
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <exception>
-#include <algorithm>
-
-#include<BBB_error.hpp>
 
 namespace BBB{
 
