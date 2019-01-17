@@ -39,7 +39,7 @@ class GPIO
 
     ~GPIO();
 
-  private:
+  protected:
     int gpioNum;
     bool isGPIOSetted;
 
