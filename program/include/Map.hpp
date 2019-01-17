@@ -24,7 +24,7 @@ class Map
 	std::vector<Cell> operator[](const size_t _x) 
 	{ 
 		if(_x < MAP_SIZE) return map[_x];
-		else throw BBB::ErrorBBB("Map's index is to large.");
+		else throw BBB::ErrorBBB("Map's index is too large.");
 	}
 
   protected:
