@@ -1,20 +1,28 @@
 # ロボット動作用のプログラム
 
 ## 実行環境  
-今回は、microSDカードにDebianを入れてプログラムを実行する予定。  
-そのため、Windowsの場合は、Microsoft Store から WSLのOSとして  
-Debian系の Ubunbu 18.04 をインストールして使うのが楽。  
+~~今回は、microSDカードにDebianを入れてプログラムを実行する予定。~~  
+~~そのため、Windowsの場合は、Microsoft Store から WSLのOSとして~~  
+~~Debian系の Ubunbu 18.04 をインストールして使うのが楽。~~  
   
-下記 URL を参照して初期設定を済ませないと  
-clang のインストールに**ものすごく時間がかかる**ため注意。  
-http://www.aise.ics.saitama-u.ac.jp/~gotoh/HowToInstallUbuntu1804OnWSL.html  
+~~下記 URL を参照して初期設定を済ませないと~~  
+~~clang のインストールに**ものすごく時間がかかる**ため注意。~~  
+~~http://www.aise.ics.saitama-u.ac.jp/~gotoh/HowToInstallUbuntu1804OnWSL.html~~
+
+今回は、BeagleBone BlackのeMMCにDebianを書き込んだ状態で実行する。  
+OSのバージョンは Debian 7.11(Wheezy)で、  
+コンパイラは、C++11に完全対応した **g++** の **4.7** を利用する。 
 
 ## ビルド方法
 
-1. 下記のコマンドでclangをインストール  
+1. 下記のコマンドで~~clang~~ **g++**をインストール  
 ```
-sudo apt-get install clang++-6.0 -y  
-```
+sudo apt-get install g++ -y  
+```  
+※インストールされるのが、**4.7 以上のバージョン**であることを確認する。  
+※Debian 7.11(Wheezy)では、デフォルトで **4.6 がインストールされる**ため注意。  
+その場合は、「g++-4.7」をパッケージ名に指定してやれば良い。   
+
 2. cd コマンドを使ってprogramディレクトリへ移動  
 
 3. 下記のコマンドでビルド  
