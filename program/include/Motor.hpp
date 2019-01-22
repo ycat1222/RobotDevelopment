@@ -6,6 +6,7 @@
 namespace BBB{
 class Motor{
 public:
+	explicit Motor() {};
 	explicit Motor(int pwmPinNum, int gpioNumIN1, int gpioNumIN2);
 
     void setPWM(int pwmPinNum);
@@ -27,8 +28,6 @@ public:
 	~Motor();
     
 private:
-	explicit Motor();
-
     PWM pwm;
     GPIO IN1, IN2;
 
