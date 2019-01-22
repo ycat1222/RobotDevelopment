@@ -13,7 +13,7 @@ class GPIO
     GPIO() {}
     GPIO(int gpioNum_);
 
-    void setGPIO(int gpioNum_) { *this = GPIO(gpioNum_); };
+    void setGPIO(int gpioNum_);
     //inならtrue、outならfalse
 
 	enum Direction { IN, OUT };

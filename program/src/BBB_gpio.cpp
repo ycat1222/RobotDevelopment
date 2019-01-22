@@ -24,6 +24,11 @@ GPIO::GPIO(int gpioNum_)
     isGPIOSetted = true;
 }
 
+void GPIO::setGPIO(int gpioNum_)
+{
+	new(this) GPIO(gpioNum_);
+}
+
 GPIO::~GPIO()
 {
     ofstream file("/sys/class/gpio/unexport", ios::binary);
