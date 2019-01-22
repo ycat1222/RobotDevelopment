@@ -20,13 +20,13 @@ BBB::Motor::Motor(int pwmPinNum, int gpioNumIN1, int gpioNumIN2)
 
 void Motor::setPWM(int pwmPinNum)
 {
-	pwm = PWM(pwmPinNum, pwmUniqueNum);
+	new(&pwm) PWM(pwmPinNum, pwmUniqueNum);
 }
 
 void Motor::setGPIO(int gpioNumIN1, int gpioNumIN2)
 {
-	IN1 = GPIO(gpioNumIN1);
-	IN2 = GPIO(gpioNumIN2);
+	new(&IN1) GPIO(gpioNumIN1);
+	new(&IN2) GPIO(gpioNumIN2);
 
 	IN1.setDirection(false);
 	IN2.setDirection(false);
