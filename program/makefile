@@ -3,7 +3,7 @@
 #コンパイラの指定 (clang-6.0)
 
 COMPILER  = g++
-CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -std=gnu++11
+CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -std=gnu++11 -fPIC
 ifeq "$(shell getconf LONG_BIT)" "64"
   LDFLAGS =
 else
