@@ -44,7 +44,7 @@ void RobotController::mSecWait(const size_t time)
 
 bool RobotController::checkRobotProperties()
 {
-	if (isSetMotorGPIO && isSetMotorPWM && isSetSensorGPIO)
+	if (isSetMotorGPIO && isSetMotorPWM && isSetSensorGPIO && isInitializePosition)
 		return true;
 	else
 		return false;

@@ -31,7 +31,11 @@ private:
 	Motor motor1, motor2;
 	GPIO sensorEast, sensorWest, sensotSouth, sensorNorth;
 
-	bool isSetMotorPWM = false, isSetMotorGPIO = false, isSetSensorGPIO = false;
+	bool isSetMotorPWM = false,
+		isSetMotorGPIO = false,
+		isSetSensorGPIO = false,
+		isInitializePosition = false;
+
 	double dutyRate_Motor1ToMotor2 = 1.0;
 
 	size_t eastTime = 0, westTime = 0, southTime = 0, northTime = 0;
