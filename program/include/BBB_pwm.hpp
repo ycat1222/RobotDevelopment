@@ -33,8 +33,8 @@ class PWM
 	void setDuty(int duty);
     std::string PWMPath;
 
-    static const int capemgr = 9;
-    static const int ocp = 3;
+    static const int CAPEMGR = 9;
+    static const int OCP = 3;
     static const int pinConnector = 9;
 	static const int PERIOD = 10000000;
 };

@@ -17,7 +17,7 @@ PWM::PWM(int pinNum, int pwmNum)
     if(!isPinNumExist) ErrorBBB("This pinNum is NOT exist.");
 
     stringstream path;
-    path << "/sys/devices/bone_capemgr." << capemgr << "/slots";
+    path << "/sys/devices/bone_capemgr." << CAPEMGR << "/slots";
 
     ofstream pwmFile(path.str());
     if(!pwmFile) ErrorBBB("Cannot Open File");
@@ -28,7 +28,7 @@ PWM::PWM(int pinNum, int pwmNum)
     pwmFile2 << "bone_pwm_P" << pinConnector << "_" << pinNum;
 
     stringstream path2;
-    path2 << "/sys/devices/ocp." << ocp << "/pwm_test_P" 
+    path2 << "/sys/devices/ocp." << OCP << "/pwm_test_P" 
           << pinConnector << "_" << pinNum << "." << pwmNum;
 
     PWMPath = path2.str();
