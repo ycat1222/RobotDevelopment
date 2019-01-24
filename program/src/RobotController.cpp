@@ -24,6 +24,12 @@ void RobotController::setSensorGPIO(int east, int west, int south, int north)
 	isSetSensorGPIO = true;
 }
 
+void RobotController::initializePosition(size_t __x, size_t __y)
+{
+	_x = __x;
+	_y = __y;
+}
+
 void RobotController::mSecWait(const size_t time)
 {
 	auto start = std::chrono::high_resolution_clock::now();
@@ -49,6 +55,8 @@ void RobotController::moveEast(const size_t mSec)
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
 
+	eastTime += mSec;
+
 	motor1.runReverse();
 	motor2.runNormal();
 
@@ -62,6 +70,8 @@ void RobotController::moveWest(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
+
+	westTime += mSec;
 
 	motor1.runNormal();
 	motor2.runReverse();
@@ -77,6 +87,8 @@ void RobotController::moveSouth(const size_t mSec)
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
 
+	southTime += mSec;
+
 	motor1.runReverse();
 	motor2.runReverse();
 
@@ -90,6 +102,8 @@ void RobotController::moveNorth(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
+
+	northTime += mSec;
 
 	motor1.runNormal();
 	motor2.runNormal();
@@ -116,5 +130,19 @@ void RobotController::setDutyRate(double motor1Rate, double motor2Rate)
 
 	motor1.setDutyRate(motor1Rate);
 	motor2.setDutyRate(motor2Rate);
+}
+
+size_t RobotController::x()
+{
+	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
+	// 下記の数字はduty を 速度[cm/ms] に変換する係数
+	return 0.0955 * aveDutyRate*(eastTime - westTime);
+}
+
+size_t RobotController::y()
+{
+	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
+	// 下記の数字はduty を 速度[cm/ms] に変換する係数
+	return 0.0955 * aveDutyRate*(northTime - southTime);
 }
 
