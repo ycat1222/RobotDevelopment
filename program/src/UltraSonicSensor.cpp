@@ -15,19 +15,20 @@ double BBB::UltraSonicSensor::distance()
 
 	std::stringstream path;
 	path << "/sys/class/gpio/gpio" << gpioNum << "/value";
+	std::ifstream valueFile(path.str());
 
-	auto valueFd = open(path.str().c_str(), O_RDONLY);
+	//auto valueFd = open(path.str().c_str(), O_RDONLY);
 
-	pollfd pfd;
-	pfd.fd = valueFd;
-	pfd.events = POLLPRI;
+	//pollfd pfd;
+	//pfd.fd = valueFd;
+	//pfd.events = POLLPRI;
 
 	auto edgeUpTime = std::chrono::high_resolution_clock::now();
-	auto nowTime = std::chrono::high_resolution_clock::now();
-
+	auto edgeDownTime = std::chrono::high_resolution_clock::now();
 	char c;
-	while (true)
-	{
+
+	/*
+	while (true) {
 		lseek(valueFd, 0, SEEK_SET);
 		auto ret = poll(&pfd, 1, -1);
 		read(valueFd, &c, 1);
@@ -43,10 +44,40 @@ double BBB::UltraSonicSensor::distance()
 		else continue;
 
 		//立ち下がり - 立ち上がり の時間計算
-		auto dtime = nowTime - edgeUpTime;
+		auto dtime = edgeDownTime - edgeUpTime;
 		// 2*距離d÷時間t = 音速V → d[mm] = 0.5*V*t = 0.1718[mm/μs]*t[μs]
 		return 0.1717975*std::chrono::duration_cast<std::chrono::microseconds>(dtime).count();
 	}
+	*/
 
+	//たち下がるまで待つ
+	valueFile >> c;
+	while (c == '1') { 
+		//ファイルの先頭に戻る
+		valueFile.seekg(0);
+		valueFile >> c;
+	};
 
+	//立ち上がり(whileを抜ける瞬間、c == 1)を待つ
+	valueFile.seekg(0);
+	valueFile >> c;
+	while (c == '0') { 
+		valueFile.seekg(0);
+		valueFile >> c;
+	};
+	edgeUpTime = std::chrono::high_resolution_clock::now();
+
+	//立ち下がり(whileを抜ける瞬間、c == 0)を待つ
+	valueFile.seekg(0);
+	valueFile >> c;
+	while (c == '1') {
+		valueFile.seekg(0);
+		valueFile >> c;
+	}
+	edgeDownTime = std::chrono::high_resolution_clock::now();
+
+	//立ち下がり - 立ち上がり の時間計算
+	auto dtime = edgeDownTime - edgeUpTime;
+	// 2*距離d÷時間t = 音速V → d[mm] = 0.5*V*t = 0.1718[mm/μs]*t[μs]
+	return 0.1717975*std::chrono::duration_cast<std::chrono::microseconds>(dtime).count();
 }
