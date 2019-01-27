@@ -14,7 +14,7 @@ public:
 	UltraSonicSensor() {}
 	UltraSonicSensor(int gpioNum_);
 
-	//距離[mm]を返す
+	//距離[cm]を返す
 	double distance();
 };
 
