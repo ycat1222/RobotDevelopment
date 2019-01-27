@@ -30,7 +30,7 @@ public:
 
 private:
 	Motor motor1, motor2;
-	GPIO sensorEast, sensorWest, sensotSouth, sensorNorth;
+	GPIO sensorEast, sensorWest, sensorSouth, sensorNorth;
 
 	bool isSetMotorPWM = false,
 		isSetMotorGPIO = false,

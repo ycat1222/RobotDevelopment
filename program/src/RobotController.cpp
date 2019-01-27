@@ -19,7 +19,7 @@ void RobotController::setSensorGPIO(int east, int west, int south, int north)
 {
 	sensorEast.setGPIO(east);
 	sensorWest.setGPIO(west);
-	sensotSouth.setGPIO(south);
+	sensorSouth.setGPIO(south);
 	sensorNorth.setGPIO(north);
 	isSetSensorGPIO = true;
 }
