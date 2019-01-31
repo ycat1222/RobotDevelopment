@@ -1,20 +1,20 @@
 ﻿#include "RobotController.hpp"
 
-void RobotController::setMotorPWM(int motor1_PWM, int motor2_PWM)
+void RobotController::initMotorPWM(int motor1_PWM, int motor2_PWM)
 {
 	motor1.setPWM(motor1_PWM);
 	motor2.setPWM(motor2_PWM);
 	isSetMotorPWM = true;
 }
 
-void RobotController::setMotorGPIO(int motor1_IN1, int motor1_IN2, int motor2_IN1, int motor2_IN2)
+void RobotController::initMotorGPIO(int motor1_IN1, int motor1_IN2, int motor2_IN1, int motor2_IN2)
 {
 	motor1.setGPIO(motor1_IN1, motor1_IN2);
 	motor2.setGPIO(motor2_IN1, motor2_IN2);
 	isSetMotorGPIO = true;
 }
 
-void RobotController::setSensorGPIO(int east, int west, int south, int north)
+void RobotController::initSensorGPIO(int east, int west, int south, int north)
 {
 	sensorEast.setGPIO(east);
 	sensorWest.setGPIO(west);
@@ -74,7 +74,7 @@ void RobotController::correctPosition()
 	}//while終わり
 }
 
-void RobotController::initializePosition(size_t __x, size_t __y)
+void RobotController::initPosition(size_t __x, size_t __y)
 {
 	//スレッドセーフにするための処理
 	std::lock_guard<std::mutex> lock(mtx);

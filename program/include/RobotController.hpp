@@ -10,11 +10,11 @@ using namespace BBB;
 class RobotController{
 public:
 	RobotController() {};
-	void setMotorPWM(int motor1_PWM, int motor2_PWM);
-	void setMotorGPIO(int motor1_IN1, int motor1_IN2, int motor2_IN1, int motor2_IN2);
-	void setSensorGPIO(int east, int west, int south, int north);
+	void initMotorPWM(int motor1_PWM, int motor2_PWM);
+	void initMotorGPIO(int motor1_IN1, int motor1_IN2, int motor2_IN1, int motor2_IN2);
+	void initSensorGPIO(int east, int west, int south, int north);
+	void initPosition(size_t __x, size_t __y);
 	void correctPosition();
-	void initializePosition(size_t __x, size_t __y);
 
 	void mSecWait(const size_t mSec);
 
