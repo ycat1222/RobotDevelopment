@@ -2,6 +2,8 @@
 
 using namespace std;
 
+const double BBB::Map::CELL_SIZE = 30.0;
+
 //ファイルからマップを読み込む
 BBB::Map::Map(std::string mapFilePath)
 {

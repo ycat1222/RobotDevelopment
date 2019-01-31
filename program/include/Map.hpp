@@ -26,10 +26,11 @@ public:
 		if (_x < MAP_SIZE) return map[_x];
 		else throw BBB::ErrorBBB("Map's index is too large.");
 	}
+	static const unsigned int MAP_SIZE = 6;
+	static const double CELL_SIZE;
 
 protected:
 	std::vector<std::vector<Cell>> map;
-	static const unsigned int MAP_SIZE = 6;
 };
 
 }; // namespace BBB
