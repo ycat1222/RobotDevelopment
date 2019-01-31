@@ -1,6 +1,5 @@
 ﻿#include "RobotController.hpp"
 
-
 void RobotController::setMotorPWM(int motor1_PWM, int motor2_PWM)
 {
 	motor1.setPWM(motor1_PWM);
@@ -22,12 +21,66 @@ void RobotController::setSensorGPIO(int east, int west, int south, int north)
 	sensorSouth.setGPIO(south);
 	sensorNorth.setGPIO(north);
 	isSetSensorGPIO = true;
+
+	using namespace BBB;
+
+	//スレッド作成
+	std::thread th_checkSensor(&RobotController::correctPosition, this);
+	//スレッド実行
+	th_checkSensor.join();
+}
+
+void RobotController::correctPosition()
+{
+	Map map("field.txt");
+
+	while (true)
+	{
+		mSecWait(500);
+
+		for (int mapX = 0; mapX < Map::MAP_SIZE; mapX++) {
+
+			//北側に壁がある場合
+			for (int mapY = 0; mapY < Map::MAP_SIZE && map[mapX][mapY].north == 1; mapY++) {
+
+				//北側に壁があるマスの下に、ロボットがいるとき→ロボットの位置を補正
+				if ((int)x() / Map::MAP_SIZE == mapX && (int)y() / Map::MAP_SIZE - 1 == mapY) {
+
+					double distance;
+
+					while (true) {
+						auto d1 = sensorNorth.distance();
+						auto d2 = sensorNorth.distance();
+						//2回測った距離の差が、30cmを超えたら、無視
+						if (std::abs(d1 - d2) > 30.0) continue;
+
+						distance = (d1 + d2) / 2.0;
+						break;
+					}
+
+					//位置補正
+					if (distance > 20.0) {
+						//スレッドセーフにするための処理
+						std::lock_guard<std::mutex> lock(mtx);
+						_x = (mapX + 0.5) * Map::CELL_SIZE;
+						_y = (mapY - 1.0 + 0.5) * Map::CELL_SIZE;
+					}
+
+				}
+
+			}
+		}
+
+	}//while終わり
 }
 
 void RobotController::initializePosition(size_t __x, size_t __y)
 {
+	//スレッドセーフにするための処理
+	std::lock_guard<std::mutex> lock(mtx);
 	_x = __x;
 	_y = __y;
+
 }
 
 void RobotController::mSecWait(const size_t time)
@@ -50,7 +103,7 @@ bool RobotController::checkRobotProperties()
 		return false;
 }
 
-void RobotController::moveEast(const size_t mSec)
+void RobotController::moveEastTime(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
@@ -66,7 +119,7 @@ void RobotController::moveEast(const size_t mSec)
 	motor2.stop();
 }
 
-void RobotController::moveWest(const size_t mSec)
+void RobotController::moveWestTime(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
@@ -82,7 +135,7 @@ void RobotController::moveWest(const size_t mSec)
 	motor2.stop();
 }
 
-void RobotController::moveSouth(const size_t mSec)
+void RobotController::moveSouthTime(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
@@ -98,7 +151,7 @@ void RobotController::moveSouth(const size_t mSec)
 	motor2.stop();
 }
 
-void RobotController::moveNorth(const size_t mSec)
+void RobotController::moveNorthTime(const size_t mSec)
 {
 	if (!checkRobotProperties())
 		BBB::ErrorBBB("Properties is not set.");
@@ -112,6 +165,31 @@ void RobotController::moveNorth(const size_t mSec)
 
 	motor1.stop();
 	motor2.stop();
+}
+
+void RobotController::moveEast(const double distance)
+{
+	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
+	//距離÷速度 で時間を出して、その時間分だけ動かす
+	moveEastTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+}
+
+void RobotController::moveWest(const double distance)
+{
+	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
+	moveWestTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+}
+
+void RobotController::moveSouth(const double distance)
+{
+	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
+	moveSouthTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+}
+
+void RobotController::moveNorth(const double distance)
+{
+	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
+	moveNorthTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
 }
 
 void RobotController::setDutyRate(double bothMotorRate)
@@ -136,13 +214,13 @@ size_t RobotController::x()
 {
 	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
 	// 下記の数字はduty を 速度[cm/ms] に変換する係数
-	return 0.0955 * aveDutyRate*(eastTime - westTime);
+	return DUTY_TO_DISTANCE * aveDutyRate*(eastTime - westTime);
 }
 
 size_t RobotController::y()
 {
 	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
 	// 下記の数字はduty を 速度[cm/ms] に変換する係数
-	return 0.0955 * aveDutyRate*(northTime - southTime);
+	return DUTY_TO_DISTANCE*aveDutyRate * (northTime - southTime);
 }
 

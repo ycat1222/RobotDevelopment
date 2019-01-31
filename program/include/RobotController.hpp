@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <chrono>
 #include <iostream>
+#include <thread>
+#include <mutex>
 #include "BeagleBone_Black.hpp"
 
 using namespace BBB;
@@ -11,15 +13,21 @@ public:
 	void setMotorPWM(int motor1_PWM, int motor2_PWM);
 	void setMotorGPIO(int motor1_IN1, int motor1_IN2, int motor2_IN1, int motor2_IN2);
 	void setSensorGPIO(int east, int west, int south, int north);
+	void correctPosition();
 	void initializePosition(size_t __x, size_t __y);
 
 	void mSecWait(const size_t mSec);
 
 	bool checkRobotProperties();
-	void moveEast(const size_t mSec);
-	void moveWest(const size_t mSec);
-	void moveSouth(const size_t mSec);
-	void moveNorth(const size_t mSec);
+	void moveEastTime(const size_t mSec);
+	void moveWestTime(const size_t mSec);
+	void moveSouthTime(const size_t mSec);
+	void moveNorthTime(const size_t mSec);
+
+	void moveEast(const double distance);
+	void moveWest(const double distance);
+	void moveSouth(const double distance);
+	void moveNorth(const double distance);
 
 	void setDutyRate(double bothMotorRate);
 	void setDutyRate(double motor1Rate, double motor2Rate);
@@ -30,7 +38,7 @@ public:
 
 private:
 	Motor motor1, motor2;
-	GPIO sensorEast, sensorWest, sensorSouth, sensorNorth;
+	UltraSonicSensor sensorEast, sensorWest, sensorSouth, sensorNorth;
 
 	bool isSetMotorPWM = false,
 		isSetMotorGPIO = false,
@@ -38,7 +46,10 @@ private:
 		isInitializePosition = false;
 
 	double dutyRate_Motor1ToMotor2 = 1.0;
+	const double DUTY_TO_DISTANCE = 0.0955;
 
 	size_t eastTime = 0, westTime = 0, southTime = 0, northTime = 0;
 	size_t _x, _y;
+
+	std::mutex mtx;
 };
