@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <chrono>
 #include <iostream>
+#include <cmath>
 #include <thread>
 #include <mutex>
 #include "BeagleBone_Black.hpp"
@@ -16,6 +17,7 @@ public:
 	void initPosition(size_t __x, size_t __y);
 	void correctPosition();
 
+	double aveDutyRate();
 	void mSecWait(const size_t mSec);
 
 	bool checkRobotProperties();
@@ -46,7 +48,7 @@ private:
 		isInitializePosition = false;
 
 	double dutyRate_Motor1ToMotor2 = 1.0;
-	const double DUTY_TO_DISTANCE = 0.0955;
+	const double DUTY_TO_VELOCITY = 0.03811;
 
 	size_t eastTime = 0, westTime = 0, southTime = 0, northTime = 0;
 	size_t _x, _y;

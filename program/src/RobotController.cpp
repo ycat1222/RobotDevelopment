@@ -36,6 +36,7 @@ void RobotController::correctPosition()
 
 	while (true)
 	{
+		// 0.5 秒ごとに位置を取得し、補正
 		mSecWait(500);
 
 		for (int mapX = 0; mapX < Map::MAP_SIZE; mapX++) {
@@ -61,9 +62,10 @@ void RobotController::correctPosition()
 					//位置補正
 					if (distance > 20.0) {
 						//スレッドセーフにするための処理
-						std::lock_guard<std::mutex> lock(mtx);
+						mtx.lock();
 						_x = (mapX + 0.5) * Map::CELL_SIZE;
 						_y = (mapY - 1.0 + 0.5) * Map::CELL_SIZE;
+						mtx.unlock();
 					}
 
 				}
@@ -77,10 +79,15 @@ void RobotController::correctPosition()
 void RobotController::initPosition(size_t __x, size_t __y)
 {
 	//スレッドセーフにするための処理
+	//スコープ出たら、自動でロック解除
 	std::lock_guard<std::mutex> lock(mtx);
 	_x = __x;
 	_y = __y;
+}
 
+double RobotController::aveDutyRate()
+{
+	return (motor1.dutyRate() + motor2.dutyRate()) / 2.0;
 }
 
 void RobotController::mSecWait(const size_t time)
@@ -114,6 +121,9 @@ void RobotController::moveEastTime(const size_t mSec)
 	motor2.runNormal();
 
 	mSecWait(mSec);
+	
+	std::lock_guard<std::mutex> lock(mtx);
+	_x += mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
 	motor2.stop();
@@ -131,6 +141,9 @@ void RobotController::moveWestTime(const size_t mSec)
 
 	mSecWait(mSec);
 
+	std::lock_guard<std::mutex> lock(mtx);
+	_x -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
+
 	motor1.stop();
 	motor2.stop();
 }
@@ -146,6 +159,9 @@ void RobotController::moveSouthTime(const size_t mSec)
 	motor2.runReverse();
 
 	mSecWait(mSec);
+
+	std::lock_guard<std::mutex> lock(mtx);
+	_y -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
 	motor2.stop();
@@ -163,33 +179,45 @@ void RobotController::moveNorthTime(const size_t mSec)
 
 	mSecWait(mSec);
 
+	std::lock_guard<std::mutex> lock(mtx);
+	_y += mSec * DUTY_TO_VELOCITY * aveDutyRate();
+
 	motor1.stop();
 	motor2.stop();
 }
 
 void RobotController::moveEast(const double distance)
 {
-	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
+	// マップの大きさ以上に動こうとしたら、例外へ
+	if (distance > Map::CELL_SIZE*Map::MAP_SIZE)
+		throw ErrorBBB("Too large distance is detected.");
+
 	//距離÷速度 で時間を出して、その時間分だけ動かす
-	moveEastTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+	moveEastTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
 }
 
 void RobotController::moveWest(const double distance)
 {
-	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
-	moveWestTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+	if (distance > Map::CELL_SIZE*Map::MAP_SIZE)
+		throw ErrorBBB("Too large distance is detected.");
+
+	moveWestTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
 }
 
 void RobotController::moveSouth(const double distance)
 {
-	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
-	moveSouthTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+	if (distance > Map::CELL_SIZE*Map::MAP_SIZE)
+		throw ErrorBBB("Too large distance is detected.");
+
+	moveSouthTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
 }
 
 void RobotController::moveNorth(const double distance)
 {
-	auto aveDutyRate = 0.50*(motor1.duty() + motor2.duty());
-	moveNorthTime(distance / (DUTY_TO_DISTANCE*aveDutyRate));
+	if (distance > Map::CELL_SIZE*Map::MAP_SIZE)
+		throw ErrorBBB("Too large distance is detected.");
+
+	moveNorthTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
 }
 
 void RobotController::setDutyRate(double bothMotorRate)
@@ -212,15 +240,13 @@ void RobotController::setDutyRate(double motor1Rate, double motor2Rate)
 
 size_t RobotController::x()
 {
-	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
-	// 下記の数字はduty を 速度[cm/ms] に変換する係数
-	return DUTY_TO_DISTANCE * aveDutyRate*(eastTime - westTime);
+	std::lock_guard<std::mutex> lock(mtx);
+	return _x;
 }
 
 size_t RobotController::y()
 {
-	auto aveDutyRate = 0.5*(motor1.dutyRate() + motor2.dutyRate());
-	// 下記の数字はduty を 速度[cm/ms] に変換する係数
-	return DUTY_TO_DISTANCE*aveDutyRate * (northTime - southTime);
+	std::lock_guard<std::mutex> lock(mtx);
+	return _y;
 }
 
