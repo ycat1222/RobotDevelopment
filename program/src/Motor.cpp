@@ -21,6 +21,7 @@ BBB::Motor::Motor(int pwmPinNum, int gpioNumIN1, int gpioNumIN2)
 void Motor::setPWM(int pwmPinNum)
 {
 	new(&pwm) PWM(pwmPinNum, pwmUniqueNum);
+	pwmUniqueNum++;
 }
 
 void Motor::setGPIO(int gpioNumIN1, int gpioNumIN2)
