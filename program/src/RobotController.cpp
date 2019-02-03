@@ -220,6 +220,26 @@ void RobotController::moveNorth(const double distance)
 	moveNorthTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
 }
 
+double RobotController::distanceEast()
+{
+	return sensorEast.distance();
+}
+
+double RobotController::distanceWest()
+{
+	return sensorWest.distance();
+}
+
+double RobotController::distanceSouth()
+{
+	return sensorSouth.distance();
+}
+
+double RobotController::distanceNorth()
+{
+	return sensorNorth.distance();
+}
+
 void RobotController::setDutyRate(double bothMotorRate)
 {
 	if (!checkRobotProperties())

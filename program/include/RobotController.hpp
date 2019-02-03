@@ -31,6 +31,11 @@ public:
 	void moveSouth(const double distance);
 	void moveNorth(const double distance);
 
+	double distanceEast();
+	double distanceWest();
+	double distanceSouth();
+	double distanceNorth();
+
 	void setDutyRate(double bothMotorRate);
 	void setDutyRate(double motor1Rate, double motor2Rate);
 
