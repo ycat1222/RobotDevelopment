@@ -4,6 +4,8 @@
 #include <cmath>
 #include <thread>
 #include <mutex>
+#include <array>
+#include <algorithm>
 #include "BeagleBone_Black.hpp"
 
 using namespace BBB;

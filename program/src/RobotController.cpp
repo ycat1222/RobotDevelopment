@@ -27,7 +27,8 @@ void RobotController::initSensorGPIO(int east, int west, int south, int north)
 	//スレッド作成
 	std::thread th_checkSensor(&RobotController::correctPosition, this);
 	//スレッド実行
-	th_checkSensor.join();
+	//th_checkSensor.join();
+	th_checkSensor.detach();
 }
 
 void RobotController::correctPosition()
@@ -222,22 +223,68 @@ void RobotController::moveNorth(const double distance)
 
 double RobotController::distanceEast()
 {
-	return sensorEast.distance();
+	std::array<double, 5> d;
+	double sum = 0.0;
+
+	for (auto& distance : d) {
+		distance = sensorEast.distance();
+		sum += distance;
+	}
+
+	auto max = *std::max_element(d.begin(), d.end());
+	auto min = *std::min_element(d.begin(), d.end());
+
+	//5回分の距離を測り、その最大と最小を飛ばして、平均を取る
+	return (sum - max - min) / 3.0;
 }
 
 double RobotController::distanceWest()
 {
-	return sensorWest.distance();
+	std::array<double, 5> d;
+	double sum = 0.0;
+
+	for (auto& distance : d) {
+		distance = sensorWest.distance();
+		sum += distance;
+	}
+
+	auto max = *std::max_element(d.begin(), d.end());
+	auto min = *std::min_element(d.begin(), d.end());
+
+	return (sum - max - min) / 3.0;
 }
 
 double RobotController::distanceSouth()
 {
-	return sensorSouth.distance();
+	std::array<double, 5> d;
+	double sum = 0.0;
+
+	for (auto& distance : d) {
+		distance = sensorSouth.distance();
+		sum += distance;
+	}
+	
+	auto max = *std::max_element(d.begin(), d.end());
+	auto min = *std::min_element(d.begin(), d.end());
+
+	return (sum - max - min) / 3.0;
+
 }
 
 double RobotController::distanceNorth()
 {
-	return sensorNorth.distance();
+	std::array<double, 5> d;
+	double sum = 0.0;
+
+	for (auto& distance : d) {
+		distance = sensorNorth.distance();
+		sum += distance;
+	}
+
+	auto max = *std::max_element(d.begin(), d.end());
+	auto min = *std::min_element(d.begin(), d.end());
+
+	return (sum - max - min) / 3.0;
 }
 
 void RobotController::setDutyRate(double bothMotorRate)
