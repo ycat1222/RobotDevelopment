@@ -103,13 +103,13 @@ void BBB::attack()
 		for (int xi = x + 1; xi < x + numBlankCell[east]; xi++)
 			if (passedMap[xi][y]) numPassedCell[east]++;
 
-		for (int xi = x - 1; xi > 0; xi--)
+		for (int xi = x - 1; xi > x - numBlankCell[west]; xi--)
 			if (passedMap[xi][y]) numPassedCell[west]++;
 
 		for (int yi = y + 1; yi < y + numBlankCell[north]; yi++)
 			if (passedMap[x][yi]) numPassedCell[north]++;
 
-		for (int yi = y - 1; yi > 0; yi--)
+		for (int yi = y - 1; yi > y - numBlankCell[south]; yi--)
 			if (passedMap[x][yi]) numPassedCell[south]++;
 
 		// すでに通ったマスが一番少ない(得点を取れる)方向 を取得
