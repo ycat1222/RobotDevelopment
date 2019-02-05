@@ -4,9 +4,10 @@ void BBB::attack()
 {
 	RobotController robot;
 	robot.initPosition(15, 15);
-	robot.initMotorGPIO(61, 60, 65, 46);
+	robot.initMotorGPIO(60, 61, 65, 46);
 	robot.initMotorPWM(14, 22);
 	robot.initSensorGPIO(27, 47, 115, 45);
+	robot.setDutyRate(0.55);
 
 	Map map("field.txt");
 
