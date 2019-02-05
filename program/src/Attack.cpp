@@ -2,6 +2,10 @@
 
 void BBB::attack()
 {
+	using namespace std;
+
+	auto startTime = chrono::high_resolution_clock::now();
+
 	RobotController robot;
 	robot.initPosition(15, 15);
 	robot.initMotorGPIO(60, 61, 65, 46);
@@ -20,21 +24,22 @@ void BBB::attack()
 	};
 
 	//通過済みのマスの情報が入った配列(初期ではfalse)
-	std::vector<std::vector<bool>> passedMap(Map::MAP_SIZE, std::vector<bool>(Map::MAP_SIZE, false));
+	vector<vector<bool>> passedMap(Map::MAP_SIZE, vector<bool>(Map::MAP_SIZE, false));
 
 	//それぞれの方向の壁がないマスの数
-	std::array<unsigned int, 4> numBlankCell = { 0,0,0,0 };
+	array<unsigned int, 4> numBlankCell = { 0,0,0,0 };
 
 	//壁に阻まれず、かつ、ボーナスマスがあるときの方向
-	std::array<bool, 4> bounusDirection = { false, false, false, false };
+	array<bool, 4> bounusDirection = { false, false, false, false };
 
 	// 敵がいる方向
-	std::array<bool, 4> entityDirection = { false, false, false, false };
+	array<bool, 4> entityDirection = { false, false, false, false };
 
 	//それぞれの方向の得点した壁までのマスの数
-	std::array<int, 4> numPassedCell = { 0,0,0,0 };
+	array<int, 4> numPassedCell = { 0,0,0,0 };
 
-	while (true) {
+	// 180秒たったら終了
+	while (chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - startTime).count() > 180) {
 
 		unsigned int x = robot.x() / Map::CELL_SIZE;
 		unsigned int y = robot.y() / Map::CELL_SIZE;
@@ -44,7 +49,7 @@ void BBB::attack()
 		entityDirection = { false, false, false, false };
 		numPassedCell = { 0,0,0,0 };
 
-		std::cout << robot.x() << ", " << robot.y() << std::endl;
+		cout << robot.x() << ", " << robot.y() << endl;
 
 		passedMap[x][y] = true;
 
@@ -62,8 +67,8 @@ void BBB::attack()
 			if (map[x][yi].south == 0) numBlankCell[south]++;
 
 		//壁がない=まっすぐ進めるマスが一番多い方向を取得
-		auto maxItr = std::max_element(numBlankCell.begin(), numBlankCell.end());
-		auto maxBlankDirection = std::distance(numBlankCell.begin(), maxItr);
+		auto maxItr = max_element(numBlankCell.begin(), numBlankCell.end());
+		auto maxBlankDirection = distance(numBlankCell.begin(), maxItr);
 
 
 		//壁に阻まれず、かつ、ボーナスマスがあるときの方向を取得
@@ -108,8 +113,8 @@ void BBB::attack()
 			if (passedMap[x][yi]) numPassedCell[south]++;
 
 		// すでに通ったマスが一番少ない(得点を取れる)方向 を取得
-		auto minItr = std::min_element(numPassedCell.begin(), numPassedCell.end());
-		auto minPassedDirection = std::distance(numPassedCell.begin(), minItr);
+		auto minItr = min_element(numPassedCell.begin(), numPassedCell.end());
+		auto minPassedDirection = distance(numPassedCell.begin(), minItr);
 
 
 		/*方向の優先順位について
@@ -153,5 +158,6 @@ void BBB::attack()
 
 	} //while終わり
 	
-
+	// 180秒後、停止
+	robot.setDutyRate(0.0);
 }
