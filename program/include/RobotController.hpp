@@ -3,9 +3,10 @@
 #include <iostream>
 #include <cmath>
 #include <thread>
-#include <mutex>
+#include <atomic>
 #include <array>
 #include <algorithm>
+
 #include "BeagleBone_Black.hpp"
 
 using namespace BBB;
@@ -58,7 +59,5 @@ private:
 	const double DUTY_TO_VELOCITY = 0.03811;
 
 	size_t eastTime = 0, westTime = 0, southTime = 0, northTime = 0;
-	size_t _x, _y;
-
-	std::mutex mtx;
+	std::atomic<size_t> _x, _y;
 };

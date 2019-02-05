@@ -51,8 +51,8 @@ void RobotController::correctPosition()
 					double distance;
 
 					while (true) {
-						auto d1 = sensorNorth.distance();
-						auto d2 = sensorNorth.distance();
+						auto d1 = distanceNorth();
+						auto d2 = distanceNorth();
 						//2回測った距離の差が、30cmを超えたら、無視
 						if (std::abs(d1 - d2) > 30.0) continue;
 
@@ -62,11 +62,8 @@ void RobotController::correctPosition()
 
 					//位置補正
 					if (distance > 20.0) {
-						//スレッドセーフにするための処理
-						mtx.lock();
 						_x = (mapX + 0.5) * Map::CELL_SIZE;
 						_y = (mapY - 1.0 + 0.5) * Map::CELL_SIZE;
-						mtx.unlock();
 					}
 
 				}
@@ -81,7 +78,6 @@ void RobotController::initPosition(size_t __x, size_t __y)
 {
 	//スレッドセーフにするための処理
 	//スコープ出たら、自動でロック解除
-	std::lock_guard<std::mutex> lock(mtx);
 	_x = __x;
 	_y = __y;
 }
@@ -123,7 +119,6 @@ void RobotController::moveEastTime(const size_t mSec)
 
 	mSecWait(mSec);
 	
-	std::lock_guard<std::mutex> lock(mtx);
 	_x += mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
@@ -142,7 +137,6 @@ void RobotController::moveWestTime(const size_t mSec)
 
 	mSecWait(mSec);
 
-	std::lock_guard<std::mutex> lock(mtx);
 	_x -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
@@ -161,7 +155,6 @@ void RobotController::moveSouthTime(const size_t mSec)
 
 	mSecWait(mSec);
 
-	std::lock_guard<std::mutex> lock(mtx);
 	_y -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
@@ -180,7 +173,6 @@ void RobotController::moveNorthTime(const size_t mSec)
 
 	mSecWait(mSec);
 
-	std::lock_guard<std::mutex> lock(mtx);
 	_y += mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
@@ -307,13 +299,11 @@ void RobotController::setDutyRate(double motor1Rate, double motor2Rate)
 
 size_t RobotController::x()
 {
-	std::lock_guard<std::mutex> lock(mtx);
 	return _x;
 }
 
 size_t RobotController::y()
 {
-	std::lock_guard<std::mutex> lock(mtx);
 	return _y;
 }
 
