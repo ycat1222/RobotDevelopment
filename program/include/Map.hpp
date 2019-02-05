@@ -21,10 +21,9 @@ class Map
 public:
 	Map(std::string path);
 
-	std::vector<Cell> operator[](const size_t _x)
+	inline std::vector<Cell> operator[](const size_t _x)
 	{
-		if (_x < MAP_SIZE) return map[_x];
-		else throw BBB::ErrorBBB("Map's index is too large.");
+		return map[_x];
 	}
 	static const unsigned int MAP_SIZE = 6;
 	static const double CELL_SIZE;
