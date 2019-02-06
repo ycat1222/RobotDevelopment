@@ -98,18 +98,18 @@ void BBB::attack()
 			bounusDirection[south] = true;
 
 
-		//// 敵がいる方向の判定 (その方向に壁がないのに、明らかに距離が近い場合)
-		//if		(map[x][y].east == false && robot.distanceEast() < Map::CELL_SIZE)
-		//	entityDirection[east] = true;
+		// 敵がいる方向の判定 (その方向に壁がないのに、明らかに距離が近い場合)
+		if		(map[x][y].east == false && robot.distanceEast() < Map::CELL_SIZE)
+			entityDirection[east] = true;
 
-		//else if (map[x][y].west == false && robot.distanceWest() < Map::CELL_SIZE)
-		//	entityDirection[west] = true;
+		else if (map[x][y].west == false && robot.distanceWest() < Map::CELL_SIZE)
+			entityDirection[west] = true;
 
-		//else if (map[x][y].north == false && robot.distanceNorth() < Map::CELL_SIZE)
-		//	entityDirection[north] = true;
+		else if (map[x][y].north == false && robot.distanceNorth() < Map::CELL_SIZE)
+			entityDirection[north] = true;
 
-		//else if (map[x][y].south == false && robot.distanceSouth() < Map::CELL_SIZE)
-		//	entityDirection[south] = true;
+		else if (map[x][y].south == false && robot.distanceSouth() < Map::CELL_SIZE)
+			entityDirection[south] = true;
 
 
 		//それぞれの方向の、壁までのまだ得点していないマスの数を取得
@@ -214,10 +214,10 @@ void BBB::attack()
 
 			}
 			else {  // 敵がいたら
-				if (d != east && !map[x][y].east) robot.moveEast(Map::CELL_SIZE);
-				if (d != west && !map[x][y].west) robot.moveWest(Map::CELL_SIZE );
-				if (d != north && !map[x][y].north) robot.moveNorth(Map::CELL_SIZE);
-				if (d != south && !map[x][y].south) robot.moveSouth(Map::CELL_SIZE);
+				if (d == east && !map[x][y].west) robot.moveWest(Map::CELL_SIZE);
+				if (d == west && !map[x][y].east) robot.moveEast(Map::CELL_SIZE );
+				if (d == north && !map[x][y].south) robot.moveSouth(Map::CELL_SIZE);
+				if (d == south && !map[x][y].north) robot.moveNorth(Map::CELL_SIZE);
 			}
 		}
 
