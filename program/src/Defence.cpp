@@ -1,9 +1,8 @@
 #include "Defence.hpp"
+using namespace std;
 
 void BBB::defence()
 {
-    using namespace std;
-
     auto startTime = chrono::high_resolution_clock::now();
     std::random_device rnd;
 
@@ -22,21 +21,20 @@ void BBB::defence()
 		north = 3,
 	};
 
-    array<bool, 4> entityDirection = { false, false, false, false };
+    array<bool, 4> entityDirection;
 
-	auto x=5;
-	auto y=5;
-	for(auto j = 0; j < 4; j++){
+	auto x = 5;
+	auto y = 5;
+	for (auto j = 0; j < 4; j++){
 		robot.moveWest(Map::CELL_SIZE);
 		x--;
-		cout << x << "," << y << endl;
+		cout << x << ", " << y << endl;
 	}
 
-   while (chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - startTime).count() > 180) {
+   while (true) {
 
-        auto flag = rand() % 4;
-
-		entityDirection = { false, false, false, false };
+        auto flag = rnd() % 4;
+		entityDirection.fill(false);
 
 		cout << x << ", " << y << endl;
 
@@ -59,15 +57,15 @@ void BBB::defence()
 					robot.moveEast(Map::CELL_SIZE);
 					x++;
 				}
-				if (i == west){ 
+				else if (i == west){ 
 					robot.moveWest(Map::CELL_SIZE);
 					x--;
 				}
-				if (i == north){ 
+				else if (i == north){ 
 					robot.moveNorth(Map::CELL_SIZE);
 					y++;
 				}
-				if (i == south){
+				else if (i == south){
 					robot.moveSouth(Map::CELL_SIZE);
 					y--;
 				}
@@ -77,20 +75,27 @@ void BBB::defence()
 					robot.moveEast(Map::CELL_SIZE);
 					x++;
 				}
-				if (i == west){ 
+				else if (i == west){ 
 					robot.moveWest(Map::CELL_SIZE);
 					x--;
 				}
-				if (i == north){ 
+				else if (i == north){ 
 					robot.moveNorth(Map::CELL_SIZE);
 					y++;
 				}
-				if (i == south){
+				else if (i == south){
 					robot.moveSouth(Map::CELL_SIZE);
 					y--;
 				}
             }
+			else{
+				robot.mSecWait(2000);
+			}
         }
+		if(chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - startTime).count() > 180){
+			break;
+		}
 	}
 	robot.setDutyRate(0.0);
 }
+

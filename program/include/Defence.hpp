@@ -5,6 +5,6 @@
 #include <chrono>
 #include <random>
 
-namespace BBB {
+namespace BBB{
 	void defence();
 };
