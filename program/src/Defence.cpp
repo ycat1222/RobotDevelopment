@@ -29,6 +29,7 @@ void BBB::defence()
 	for(auto j = 0; j < 4; j++){
 		robot.moveWest(Map::CELL_SIZE);
 		x--;
+		cout << x << "," << y << endl;
 	}
 
    while (chrono::duration_cast<chrono::seconds>(chrono::high_resolution_clock::now() - startTime).count() > 180) {
