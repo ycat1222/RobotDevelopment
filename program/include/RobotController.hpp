@@ -42,6 +42,9 @@ public:
 	void setDutyRate(double bothMotorRate);
 	void setDutyRate(double motor1Rate, double motor2Rate);
 
+	void correctX(int dx);
+	void correctY(int dy);
+
 	//座標系の単位は[cm]
 	size_t x();
 	size_t y();

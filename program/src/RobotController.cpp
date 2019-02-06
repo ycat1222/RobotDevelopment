@@ -76,8 +76,6 @@ void RobotController::correctPosition()
 
 void RobotController::initPosition(size_t __x, size_t __y)
 {
-	//スレッドセーフにするための処理
-	//スコープ出たら、自動でロック解除
 	_x = __x;
 	_y = __y;
 }
@@ -118,8 +116,6 @@ void RobotController::moveEastTime(const size_t mSec)
 	motor2.runNormal();
 
 	mSecWait(mSec);
-	
-	_x += mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
 	motor2.stop();
@@ -137,8 +133,6 @@ void RobotController::moveWestTime(const size_t mSec)
 
 	mSecWait(mSec);
 
-	_x -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
-
 	motor1.stop();
 	motor2.stop();
 }
@@ -154,8 +148,6 @@ void RobotController::moveSouthTime(const size_t mSec)
 	motor2.runReverse();
 
 	mSecWait(mSec);
-
-	_y -= mSec * DUTY_TO_VELOCITY * aveDutyRate();
 
 	motor1.stop();
 	motor2.stop();
@@ -173,8 +165,6 @@ void RobotController::moveNorthTime(const size_t mSec)
 
 	mSecWait(mSec);
 
-	_y += mSec * DUTY_TO_VELOCITY * aveDutyRate();
-
 	motor1.stop();
 	motor2.stop();
 }
@@ -187,6 +177,8 @@ void RobotController::moveEast(const double distance)
 
 	//距離÷速度 で時間を出して、その時間分だけ動かす
 	moveEastTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
+
+	_x += distance;
 }
 
 void RobotController::moveWest(const double distance)
@@ -195,6 +187,8 @@ void RobotController::moveWest(const double distance)
 		throw ErrorBBB("Too large distance is detected.");
 
 	moveWestTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
+
+	_x -= distance;
 }
 
 void RobotController::moveSouth(const double distance)
@@ -203,6 +197,8 @@ void RobotController::moveSouth(const double distance)
 		throw ErrorBBB("Too large distance is detected.");
 
 	moveSouthTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
+
+	_y -= distance;
 }
 
 void RobotController::moveNorth(const double distance)
@@ -211,6 +207,8 @@ void RobotController::moveNorth(const double distance)
 		throw ErrorBBB("Too large distance is detected.");
 
 	moveNorthTime( distance / (DUTY_TO_VELOCITY*aveDutyRate()) );
+
+	_y += distance;
 }
 
 double RobotController::distanceEast()
@@ -295,6 +293,16 @@ void RobotController::setDutyRate(double motor1Rate, double motor2Rate)
 
 	motor1.setDutyRate(motor1Rate);
 	motor2.setDutyRate(motor2Rate);
+}
+
+void RobotController::correctX(int dx)
+{
+	_x += dx;
+}
+
+void RobotController::correctY(int dy)
+{
+	_y += dy;
 }
 
 size_t RobotController::x()
