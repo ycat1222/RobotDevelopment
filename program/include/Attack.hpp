@@ -3,6 +3,7 @@
 #include <array>
 #include <algorithm>
 #include <chrono>
+#include <random>
 
 namespace BBB {
 	void attack();
