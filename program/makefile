@@ -2,14 +2,14 @@
 
 #コンパイラの指定 (clang-6.0)
 
-COMPILER  = clang++-6.0
-CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -Wno-missing-field-initializers -std=gnu++1z
+COMPILER  = g++
+CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -std=gnu++11 -fPIC
 ifeq "$(shell getconf LONG_BIT)" "64"
   LDFLAGS =
 else
   LDFLAGS =
 endif
-LIBS      =
+LIBS      = -lm -lpthread
 INCLUDE   = -I./include
 TARGET    = ./start
 SRCDIR    = ./src
